@@ -6,35 +6,38 @@ import styles from "./page.module.css";
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
   async function onSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
+    setMessage(null);
     setError(null);
 
     try {
-      // const formData = new FormData(event.currentTarget);
+      const formData = new FormData(event.currentTarget);
+      const payload = Object.fromEntries(formData);
+
+      console.log(JSON.stringify(payload));
+
       const response = await fetch(
-        "https://challenge.broobe.net/api/v1/login",
+        "https://challenge.broobe.net/api/v1/users",
         {
           method: "POST",
-          body: {
-            email: "person@domain.com.",
-            password: "string",
+          headers: {
+            "Content-Type": "application/json",
           },
+          body: JSON.stringify(payload),
         }
-      )
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+      );
 
-      // console.log(formData);
-      console.log(response);
-
-      if (!response.ok) {
-        throw new Error("Failed to submit the data. Please try again.");
+      if (response.ok) {
+        setMessage('Usuario registrado correctamente.');
+      } else {
+        throw new Error("Hubo un error al registrar al usuario, por favor pruebe nuevamente.");
       }
 
-      const data = await response.json();
+
     } catch (error) {
       setError(error.message);
       console.error(error);
@@ -46,8 +49,8 @@ export default function Home() {
   return (
     <section className={styles.login}>
       <form className={styles.form} onSubmit={onSubmit}>
-        <label htmlFor="user">Usuario</label>
-        <input type="text" name="user" className={styles.input} />
+        <label htmlFor="name">Usuario</label>
+        <input type="text" name="name" className={styles.input} />
         <label htmlFor="email">Email</label>
         <input type="email" name="email" className={styles.input} />
         <label htmlFor="password">Contraseña</label>
@@ -56,6 +59,7 @@ export default function Home() {
           {isLoading ? "Loading..." : "Registrarme"}
         </button>
       </form>
+      {message && <div style={{ color: "green" }}>{message}</div>}
       {error && <div style={{ color: "red" }}>{error}</div>}
     </section>
   );
