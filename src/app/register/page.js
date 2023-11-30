@@ -18,8 +18,6 @@ export default function Home() {
       const formData = new FormData(event.currentTarget);
       const payload = Object.fromEntries(formData);
 
-      console.log(JSON.stringify(payload));
-
       const response = await fetch(
         "https://challenge.broobe.net/api/v1/users",
         {
