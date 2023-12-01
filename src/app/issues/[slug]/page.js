@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { auth } from "@/util/auth";
+import { auth } from "@/utils/auth";
 
 export default function Page({ params: { slug } }) {
   const [data, setData] = useState([]);

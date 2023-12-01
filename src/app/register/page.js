@@ -30,12 +30,12 @@ export default function Home() {
       );
 
       if (response.ok) {
-        setMessage('Usuario registrado correctamente.');
+        setMessage("Usuario registrado correctamente.");
       } else {
-        throw new Error("Hubo un error al registrar al usuario, por favor pruebe nuevamente.");
+        throw new Error(
+          "Hubo un error al registrar al usuario, por favor pruebe nuevamente."
+        );
       }
-
-
     } catch (error) {
       setError(error.message);
       console.error(error);
@@ -54,7 +54,7 @@ export default function Home() {
         <label htmlFor="password">Contraseña</label>
         <input type="password" name="password" className={styles.input} />
         <button type="submit" disabled={isLoading}>
-          {isLoading ? "Loading..." : "Registrarme"}
+          {isLoading ? "Cargando..." : "Registrarme"}
         </button>
       </form>
       {message && <div style={{ color: "green" }}>{message}</div>}

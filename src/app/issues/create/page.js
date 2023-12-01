@@ -1,55 +1,61 @@
 "use client";
 
 import React, { useState } from "react";
-import { auth } from "@/util/auth";
+import styles from "./page.module.css";
+import { postIssue } from "@/app/api/auth/requests";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   async function onSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    try {
-      const formData = new FormData(event.currentTarget);
-      const payload = Object.fromEntries(formData);
+    const formData = new FormData(event.currentTarget);
+    const payload = Object.fromEntries(formData);
 
-      const response = await fetch(
-        "https://challenge.broobe.net/api/v1/issues",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + auth.getToken(),
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+    const response = await postIssue(payload);
 
-      if (!response.ok) {
-        throw new Error(
-          "Hubo un error al generar el issue, por favor pruebe nuevamente."
-        );
-      }
-    } catch (error) {
-      setError(error);
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+    if (response) {
+      router.push("/issues");
     }
   }
+
   return (
-    <form onSubmit={onSubmit}>
-      <label htmlFor="name">Nombre</label>
-      <input type="text" name="name" />
-      <label htmlFor="description">Descripcion</label>
-      <input type="text" name="description" />
-      <input type="text" name="priority_id" value={2} />
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Loading..." : "Registrarme"}
-      </button>
-    </form>
+    <section className={styles.formContainer}>
+      <h1 className={styles.title}>Nuevo issue</h1>
+      <form onSubmit={onSubmit} className={styles.form}>
+        <label htmlFor="name" className={styles.label}>
+          Nombre
+        </label>
+        <input type="text" name="name" className={styles.field} />
+        <label htmlFor="description" className={styles.label}>
+          Descripcion
+        </label>
+        <input type="text" name="description" className={styles.field} />
+        <label htmlFor="priority_id" className={styles.label}>
+          Prioridad
+        </label>
+        <select name="priority_id" className={styles.field} defaultValue={2}>
+          <option value={1}>1</option>
+          <option value={2} selected>
+            2
+          </option>
+          <option value={3}>3</option>
+        </select>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={styles.confirmButton}
+        >
+          {isLoading ? "Cargando..." : "Registrar issue"}
+        </button>
+      </form>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+    </section>
   );
 }

@@ -2,77 +2,78 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { auth } from "@/util/auth";
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
+import { auth } from "@/utils/auth";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import IssueCard from "@/components/IssueCard/IssueCard";
+import Link from "next/link";
+import { Oval } from "react-loader-spinner";
 
 export default function Page() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getData() {
-      const response = await fetch(
-        "https://challenge.broobe.net/api/v1/issues",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + auth.getToken(),
-          },
-        }
-      );
+      try {
+        const response = await fetch(
+          "https://challenge.broobe.net/api/v1/issues",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + auth.getToken(),
+            },
+          }
+        );
 
-      const issues = await response.json();
-      setData(issues);
+        const issues = await response.json();
+        setData(issues);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
     }
 
     getData();
   }, []);
 
-  const handleDelete = (id) => {
-    confirmAlert({
-      title: `¿Está seguro que desea eliminar el issue #${id}?`,
-      message: 'Una vez eliminado, el mismo no podrá ser recuperado.',
-      buttons: [
-        {
-          label: 'Si',
-          onClick: async () => {
-            await fetch(
-              `https://challenge.broobe.net/api/v1/issues/${id}`,
-              {
-                method: "DELETE",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: "Bearer " + auth.getToken(),
-                },
-              }
-            );
-            setData((prev) => prev.filter((issue) => issue.id !== id));
-          }
-        },
-        {
-          label: 'No'
-        }
-      ]
-    });
-  };
-
   return (
     <section className={styles.issues}>
-      <h1>Issues</h1>
-      <button>Agregar</button>
-      <ul className={styles.issuesList}>
-        {data.map((issue) => (
-          <li key={issue.id} className={styles.issue}>
-            <p>{issue.name}</p>
-            <p>{issue.description}</p>
-            <button>Editar</button>
-            <button onClick={() => handleDelete(issue.id)}>
-              Eliminar CON CONFIRMACION
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.titleContainer}>
+        <h1 className={styles.title}>Issues</h1>
+      </div>
+      {loading ? (
+        <Oval
+          height={80}
+          width={80}
+          className={styles.loadingSpinner}
+          color="#503FE0"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          ariaLabel="oval-loading"
+          secondaryColor="#503FE0"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      ) : data && data.length > 0 ? (
+        <ul className={styles.issuesList}>
+          {data.map((issue) => (
+            <IssueCard key={issue.id} data={issue} setData={setData} />
+          ))}
+          <Link href="/issues/create" className={styles.add}>
+            +
+          </Link>
+        </ul>
+      ) : (
+        <>
+          <p>En este momento no hay issues activos.</p>
+          <Link href="/issues/create" className={styles.addButton}>
+            Agregar
+          </Link>
+        </>
+      )}
     </section>
   );
 }
