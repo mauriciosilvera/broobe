@@ -1,3 +1,5 @@
+/*eslint no-undef: 0*/
+
 import { auth } from "@/utils/auth";
 
 export const logIn = async (credentials) => {
