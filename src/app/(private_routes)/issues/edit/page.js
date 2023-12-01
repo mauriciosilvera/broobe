@@ -69,7 +69,7 @@ export default function Page({ params: { slug } }) {
     <section className={styles.formContainer}>
       <h1 className={styles.title}>Editar issue</h1>
       <form onSubmit={onSubmit} className={styles.form}>
-        {console.log(data)}
+
         <label htmlFor="name" className={styles.label}>
           Nombre
         </label>

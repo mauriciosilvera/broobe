@@ -3,11 +3,13 @@
 import React, { useState } from "react";
 import styles from "./page.module.css";
 import { auth } from "@/utils/auth";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -15,33 +17,19 @@ export default function Home() {
     setError(null);
 
     const formData = new FormData(event.currentTarget);
-    // const payload = Object.fromEntries(formData);
-
-    // const response = await fetch("https://challenge.broobe.net/api/v1/login", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(payload),
-    // });
-
     const response = await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
       redirect: false,
     });
 
-    console.log(response);
-    // const parsedResponse = await response.json();
-
-    // if (parsedResponse.message) {
-    //   setError("Usuario o contraseña incorrectos.");
-    //   setIsLoading(false);
-    //   return;
-    // }
-
-    // auth.signin(parsedResponse.token);
     setIsLoading(false);
+    if (response?.error) {
+      setError(response.error);
+      return;
+    }
+
+    router.push("/issues");
   }
 
   return (
@@ -54,7 +42,6 @@ export default function Home() {
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Cargando..." : "Submit"}
         </button>
-        <button onClick={() => signIn()}>Signin</button>
         <p>¿No tenes cuenta? Registrate acá.</p>
       </form>
       {error && <div style={{ color: "red" }}>{error}</div>}

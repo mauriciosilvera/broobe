@@ -1,7 +1,7 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const authOptions = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -17,7 +17,6 @@ const authOptions = {
         },
       },
       async authorize(credentials) {
-
         const response = await fetch(
           "https://challenge.broobe.net/api/v1/login",
           {
@@ -30,10 +29,8 @@ const authOptions = {
         );
 
         const user = await response.json();
-        console.log(response);
-        console.log(user);
 
-        if (res.ok && user) {
+        if (response.ok && user) {
           return user;
         }
 
@@ -44,8 +41,8 @@ const authOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET
-//   debug: process.env.NODE_ENV === "development",
+  secret: process.env.NEXTAUTH_SECRET,
+  //   debug: process.env.NODE_ENV === "development",
 };
 
 const handler = NextAuth(authOptions);
