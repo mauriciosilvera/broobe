@@ -9,15 +9,17 @@ export default function Page({ params: { slug } }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
-  const [priorities, setPriorities] = useState([]);
+  const [prioritiesData, setPrioritiesData] = useState([]);
+  const [selectedPriority, setSelectedPriority] = useState();
   const router = useRouter();
 
   useEffect(() => {
     async function getData() {
-      const issues = await getIssue(slug);
-      setData(issues);
-      const priorities = await getPriorities();
-      setPriorities(priorities);
+      const issue = await getIssue(slug);
+      setData(issue);
+      setSelectedPriority(issue.priority_id);
+      const prioritiesData = await getPriorities();
+      setPrioritiesData(prioritiesData);
     }
 
     getData();
@@ -77,10 +79,11 @@ export default function Page({ params: { slug } }) {
         <select
           name="priority_id"
           className={styles.input}
-          defaultValue={data?.priority_id}
+          value={selectedPriority}
+          onChange={(e) => setSelectedPriority(e.target.value)}
         >
-          {priorities?.map((prioritie) => (
-            <option key={prioritie.id} value={prioritie.id}>
+          {prioritiesData?.map((prioritie) => (
+            <option key={prioritie.type} value={prioritie.id}>
               {prioritie.type}
             </option>
           ))}
