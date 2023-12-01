@@ -32,7 +32,6 @@ export default function Page({ params: { slug } }) {
   async function onSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
-    setMessage(null);
     setError(null);
 
     try {
@@ -76,7 +75,7 @@ export default function Page({ params: { slug } }) {
         <input
           type="text"
           name="name"
-          className={styles.field}
+          className={styles.input}
           defaultValue={data?.name}
         />
         <label htmlFor="description" className={styles.label}>

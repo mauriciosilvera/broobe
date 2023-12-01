@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 import { auth } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,15 +35,26 @@ export default function Home() {
 
   return (
     <section className={styles.login}>
+      <h1 className={styles.title}>Ingresar</h1>
       <form className={styles.form} onSubmit={onSubmit}>
         <label htmlFor="email">Email</label>
         <input type="email" name="email" className={styles.input} />
         <label htmlFor="password">Contraseña</label>
         <input type="password" name="password" className={styles.input} />
-        <button type="submit" disabled={isLoading}>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={styles.confirmButton}
+        >
           {isLoading ? "Cargando..." : "Submit"}
         </button>
-        <p>¿No tenes cuenta? Registrate acá.</p>
+        <p>
+          ¿No tenes cuenta? Registrate{" "}
+          <Link href="/register" style={{ color: "blue" }}>
+            acá
+          </Link>
+          .
+        </p>
       </form>
       {error && <div style={{ color: "red" }}>{error}</div>}
     </section>
