@@ -6,6 +6,12 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import broobeLogo from "../../../public/logo-broobe.svg";
 import Image from "next/image";
+import { auth } from "@/utils/auth";
+
+const handleSignOut = () => {
+  signOut();
+  auth.signout();
+};
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -15,7 +21,7 @@ export function Navbar() {
         <Image src={broobeLogo} alt="logo" />
       </Link>
       {session?.user ? (
-        <button onClick={() => signOut()} className={styles.signOut}>
+        <button onClick={handleSignOut} className={styles.signOut}>
           Cerrar sesión
         </button>
       ) : (

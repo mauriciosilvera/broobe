@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { auth } from "@/utils/auth";
 import styles from "./page.module.css";
 import { getIssue, getPriorities, patchIssue } from "@/utils/requests";
 
