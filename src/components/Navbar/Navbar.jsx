@@ -15,16 +15,18 @@ export function Navbar() {
         <Image src={broobeLogo} alt="logo" />
       </Link>
       {session?.user ? (
-        <>
-          <button onClick={() => signOut()} className="btn btn-danger btn-sm">
-            Sign Out
-          </button>
-        </>
+        <button onClick={() => signOut()} className={styles.signOut}>
+          Cerrar sesión
+        </button>
       ) : (
-        <>
-          <Link href="/login">Login</Link>
-          <Link href="/register">Register</Link>
-        </>
+        <div className={styles.linksContainer}>
+          <Link href="/register" className={styles.link}>
+            Registrarse
+          </Link>
+          <Link href="/login" className={styles.link}>
+            Ingresar
+          </Link>
+        </div>
       )}
     </nav>
   );

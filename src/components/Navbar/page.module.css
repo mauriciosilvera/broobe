@@ -7,3 +7,23 @@
     padding: 0 2rem;
     align-items: center;
 }
+
+.linksContainer {
+    display: flex;
+    gap: 2rem;
+}
+
+.signOut {
+    background-color: white;
+    padding: 1rem;
+    border-radius: .5rem;
+    font-weight: 600;
+    color:#503FE0;
+    border: 0;
+    cursor: pointer;
+}
+
+.link {
+    font-size: 1.25rem;
+    font-weight: 600;
+}

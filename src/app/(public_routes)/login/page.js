@@ -46,7 +46,7 @@ export default function Home() {
           disabled={isLoading}
           className={styles.confirmButton}
         >
-          {isLoading ? "Cargando..." : "Submit"}
+          {isLoading ? "Cargando..." : "Acceder"}
         </button>
         <p>
           ¿No tenes cuenta? Registrate{" "}
