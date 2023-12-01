@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { auth } from "@/utils/auth";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import IssueCard from "@/components/IssueCard/IssueCard";
 import Link from "next/link";
 import { Oval } from "react-loader-spinner";
+import { getIssues } from "@/utils/requests";
 
 export default function Page() {
   const [data, setData] = useState(null);
@@ -15,18 +15,9 @@ export default function Page() {
   useEffect(() => {
     async function getData() {
       try {
-        const response = await fetch(
-          "https://challenge.broobe.net/api/v1/issues",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + auth.getToken(),
-            },
-          }
-        );
+        const issues = await getIssues();
 
-        const issues = await response.json();
+        console.log(issues);
         setData(issues);
       } catch (error) {
         console.error("Error:", error);

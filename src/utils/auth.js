@@ -1,3 +1,5 @@
+"use client";
+
 export const KEY_TOKEN = "token";
 export const auth = {
   isAuthenticated() {
@@ -6,8 +8,8 @@ export const auth = {
     }
   },
   signin(data) {
-    auth.isAuthenticated = true;
-    localStorage.setItem(KEY_TOKEN, data);
+      // auth.isAuthenticated = true;
+      localStorage.setItem(KEY_TOKEN, data);
   },
   getToken() {
     // if (!auth.isAuthenticated()) return null;

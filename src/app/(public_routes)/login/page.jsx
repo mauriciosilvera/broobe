@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import styles from "./page.module.css";
-import { auth } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { auth } from "@/utils/auth";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +18,18 @@ export default function Home() {
     setError(null);
 
     const formData = new FormData(event.currentTarget);
+    const payload = Object.fromEntries(formData);
+    const res = await fetch(`https://challenge.broobe.net/api/v1/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const token = await res.json();
+    auth.signin(token?.token);
+
     const response = await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),

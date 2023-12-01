@@ -35,7 +35,7 @@ export default function IssueCard(props) {
 
   return (
     <li key={data.id} className={styles.issue}>
-      <div>
+      <div className={styles.textContainer}>
         <p className={styles.title}>{`#${data.id} - ${data.name}`}</p>
         <p>{data.description}</p>
       </div>

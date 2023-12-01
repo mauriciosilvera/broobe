@@ -49,9 +49,7 @@ export default function Page({ params: { slug } }) {
         }
       );
 
-      if (response.ok) {
-        setMessage("Usuario registrado correctamente.");
-      } else {
+      if (!response.ok) {
         throw new Error(
           "Hubo un error al registrar al usuario, por favor pruebe nuevamente."
         );
@@ -68,7 +66,6 @@ export default function Page({ params: { slug } }) {
     <section className={styles.formContainer}>
       <h1 className={styles.title}>Editar issue</h1>
       <form onSubmit={onSubmit} className={styles.form}>
-
         <label htmlFor="name" className={styles.label}>
           Nombre
         </label>

@@ -10,6 +10,10 @@
     align-items: center;
 }
 
+.textContainer {
+    width: 70%;
+}
+
 .title {
     font-size: 1.25rem;
     font-weight: 500;

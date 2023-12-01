@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
+import { registerUser } from "@/utils/requests";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,16 +21,7 @@ export default function Home() {
       const formData = new FormData(event.currentTarget);
       const payload = Object.fromEntries(formData);
 
-      const response = await fetch(
-        "https://challenge.broobe.net/api/v1/users",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await registerUser(payload);
 
       if (!response.ok) {
         throw new Error(

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import styles from "./page.module.css";
-import { postIssue } from "@/app/api/auth/requests";
+import { postIssue } from "@/utils/requests";
 import { useRouter } from "next/navigation";
 
 export default function Page() {

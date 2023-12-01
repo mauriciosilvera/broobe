@@ -1,5 +1,6 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { logIn } from "../../../../utils/requests";
 
 export const authOptions = {
   providers: [
@@ -17,21 +18,10 @@ export const authOptions = {
         },
       },
       async authorize(credentials) {
-        const response = await fetch(
-          "https://challenge.broobe.net/api/v1/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(credentials),
-          }
-        );
+        const response = await logIn(credentials);
 
-        const user = await response.json();
-
-        if (response.ok && user) {
-          return user;
+        if (response.token) {
+          return response;
         }
 
         return null;
@@ -41,7 +31,7 @@ export const authOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  // secret: process.env.NEXTAUTH_SECRET,
   //   debug: process.env.NODE_ENV === "development",
 };
 
