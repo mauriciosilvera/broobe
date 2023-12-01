@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 import { confirmAlert } from "react-confirm-alert";
 import { MdEdit, MdDelete } from "react-icons/md";
 import Link from "next/link";
-import { auth } from "@/utils/auth";
+import { deleteIssue } from "@/utils/requests";
 
 export default function IssueCard(props) {
   const { data, setData } = props;
@@ -16,13 +16,7 @@ export default function IssueCard(props) {
         {
           label: "Si",
           onClick: async () => {
-            await fetch(`https://challenge.broobe.net/api/v1/issues/${id}`, {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + auth.getToken(),
-              },
-            });
+            await deleteIssue(id);
             setData((prev) => prev.filter((issue) => issue.id !== id));
           },
         },

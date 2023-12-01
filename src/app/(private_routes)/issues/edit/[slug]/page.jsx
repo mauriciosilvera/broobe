@@ -3,27 +3,20 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "@/utils/auth";
 import styles from "./page.module.css";
+import { getIssue, getPriorities, patchIssue } from "@/utils/requests";
 
 export default function Page({ params: { slug } }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
+  const [priorities, setPriorities] = useState([]);
 
   useEffect(() => {
     async function getData() {
-      const response = await fetch(
-        `https://challenge.broobe.net/api/v1/issues/${slug}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + auth.getToken(),
-          },
-        }
-      );
-
-      const issues = await response.json();
+      const issues = await getIssue(slug);
       setData(issues);
+      const priorities = await getPriorities();
+      setPriorities(priorities);
     }
 
     getData();
@@ -38,20 +31,11 @@ export default function Page({ params: { slug } }) {
       const formData = new FormData(event.currentTarget);
       const payload = Object.fromEntries(formData);
 
-      const response = await fetch(
-        "https://challenge.broobe.net/api/v1/users",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await patchIssue(payload);
 
       if (!response.ok) {
         throw new Error(
-          "Hubo un error al registrar al usuario, por favor pruebe nuevamente."
+          "Hubo un error al editar el issue, por favor pruebe nuevamente."
         );
       }
     } catch (error) {
@@ -81,7 +65,7 @@ export default function Page({ params: { slug } }) {
         <input
           type="text"
           name="description"
-          className={styles.field}
+          className={styles.input}
           defaultValue={data?.description}
         />
         <label htmlFor="priority_id" className={styles.label}>
@@ -89,14 +73,14 @@ export default function Page({ params: { slug } }) {
         </label>
         <select
           name="priority_id"
-          className={styles.field}
+          className={styles.input}
           defaultValue={data?.priority_id}
         >
-          <option value={1}>1</option>
-          <option value={2} selected>
-            2
-          </option>
-          <option value={3}>3</option>
+          {priorities?.map((prioritie) => (
+            <option key={prioritie.id} value={prioritie.id}>
+              {prioritie.type}
+            </option>
+          ))}
         </select>
         <button
           type="submit"

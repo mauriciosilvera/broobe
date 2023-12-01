@@ -1,14 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { postIssue } from "@/utils/requests";
+import { getPriorities, postIssue } from "@/utils/requests";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [priorities, setPriorities] = useState([]);
   const router = useRouter();
+
+  useEffect(() => {
+    async function getData() {
+      const priorities = await getPriorities();
+      setPriorities(priorities);
+    }
+    getData();
+  }, []);
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -40,12 +49,12 @@ export default function Page() {
         <label htmlFor="priority_id" className={styles.label}>
           Prioridad
         </label>
-        <select name="priority_id" className={styles.field} defaultValue={2}>
-          <option value={1}>1</option>
-          <option value={2} selected>
-            2
-          </option>
-          <option value={3}>3</option>
+        <select name="priority_id" className={styles.field} defaultValue={1}>
+          {priorities?.map((prioritie) => (
+            <option key={prioritie.id} value={prioritie.id}>
+              {prioritie.type}
+            </option>
+          ))}
         </select>
         <button
           type="submit"
