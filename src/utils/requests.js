@@ -64,17 +64,21 @@ export const postIssue = async (issue) => {
   return response.json();
 };
 
-export const patchIssue = async (issue) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(issue),
-  });
+export const patchIssue = async (issue, slug) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/issues/${slug}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + auth.getToken(),
+      },
+      body: JSON.stringify(issue),
+    }
+  );
 
   if (!response.ok) return new Error();
-  return response.json();
+  return response;
 };
 
 export const deleteIssue = async (id) => {

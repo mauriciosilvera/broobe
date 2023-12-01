@@ -3,12 +3,14 @@
 import React, { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import { getIssue, getPriorities, patchIssue } from "@/utils/requests";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params: { slug } }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
   const [priorities, setPriorities] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     async function getData() {
@@ -30,13 +32,15 @@ export default function Page({ params: { slug } }) {
       const formData = new FormData(event.currentTarget);
       const payload = Object.fromEntries(formData);
 
-      const response = await patchIssue(payload);
+      const response = await patchIssue(payload, slug);
 
       if (!response.ok) {
         throw new Error(
           "Hubo un error al editar el issue, por favor pruebe nuevamente."
         );
       }
+
+      router.push("/issues");
     } catch (error) {
       setError(error.message);
       console.error(error);

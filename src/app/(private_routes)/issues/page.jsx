@@ -17,7 +17,6 @@ export default function Page() {
       try {
         const issues = await getIssues();
 
-        console.log(issues);
         setData(issues);
       } catch (error) {
         console.error("Error:", error);
